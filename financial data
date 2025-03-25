@@ -1,0 +1,30 @@
+import pandas as pd
+import yfinance as yf
+import time
+
+url = 'https://enwikipedia.org/wiki/List_of_S%26P_500companies'
+
+tables = pd.read_html(url)
+sp500_table = tables[0]
+
+tickers = sp500_table['Symbol'].tolist()
+
+def get_market_cap(ticker):
+    try:
+        stock = yf.Ticker(ticker)
+        time.sleep(0.5)
+        market_cap = stock.info.get("marketCap", None)
+        return market_cap
+    except:
+        return None
+    
+market_caps = {}
+for ticker in tickers:
+    market_cap = get_market_cap(ticker)
+    if market_cap:
+        market_caps[ticker] = market_cap
+
+market_cap_df = pd.DataFrame(list(market_caps.items()), columns=['Symbol', 'Market Cap'])
+market_cap_df = market_cap_df.sort_values(by='Market Cap', ascending=False).head(10)
+
+print(market_cap_df)
