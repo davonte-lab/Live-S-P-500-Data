@@ -28,3 +28,11 @@ market_cap_df = pd.DataFrame(list(market_caps.items()), columns=['Symbol', 'Mark
 market_cap_df = market_cap_df.sort_values(by='Market Cap', ascending=False).head(10)
 
 print(market_cap_df)
+
+with open("top_10_sp500.md", "w") as file:
+    file.write("#Top 10 S&P 500 Companies by Market Cap\n\n")
+    file.write("| Rank | Symbol | Market Cap (USD) |\n")
+    file.write("|------|--------|------------------|\n")
+
+    for idx, row in market_cap_df.iterrows():
+        file.write(f"| {idx+1} | `{row['Symbol']}` | ${row['Market Cap']:,} |\n")
